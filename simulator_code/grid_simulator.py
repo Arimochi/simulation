@@ -3,6 +3,7 @@
 
 ### import modules ###
 from asyncore import read
+from cgi import test
 from tkinter import X
 import xml.etree.ElementTree as ET
 import sys
@@ -141,6 +142,7 @@ def find_OD_node_and_lane():
 
 #障害物を見つける
 def find_obstacle_lane_and_node():
+  #fake_dic = {}
   while True:
     obstacle_lane_id = np.random.randint(len(edge_lanes_list))
     obstacle_node_id = x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[-1], edge_lanes_list[obstacle_lane_id].node_y_list[-1])]
@@ -161,9 +163,12 @@ def find_obstacle_lane_and_node():
   obstacle_node_id_list.append(obstacle_node_id)
   pair_node_id_list.append(x_y_dic[(edge_lanes_list[obstacle_lane_id].node_x_list[0], edge_lanes_list[obstacle_lane_id].node_y_list[0])])
   #print("障害物ノードリスト : "+str(obstacle_node_id_list))
+  """for car in obstacle_node_id_list:
+    fake_dic[car] = 1"""
+  #fake_dic[obstacle_node_id] = 1 #障害物を辞書で管理
+  #print(fake_dic) #辞書化した障害物
 
   return obstacle_lane_id, obstacle_node_id
-
 #ネットワークの描画
 def draw_road_network(DG):
   pos=nx.get_node_attributes(DG,'pos')
@@ -221,8 +226,6 @@ def animate(time):
 
       # TODO: if the car encounters road closure, it U-turns.
       if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20:
-        #print("見つけました")
-        #car.fake_dic[] = 1
         x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
 
       xdata.append(x_new)
@@ -291,8 +294,18 @@ def animate(time):
     #print("ゴールタイム"+str(goal_time_list))
     #print("総移動距離"+str(moving_distance_list))
 
-    print(car.fake_dic)
-    #print(car.obstacles_info_list)
+    print(fakeobs_list)
+    dic_1 = {}
+    for i in fakeobs_list:
+      dic_1[i] = 0
+    #print(dic_1)
+    print(obstacles_list)
+    for i in obstacles_list:
+      dic_1[i] = 1
+    print(dic_1)
+
+    #print(obstacle_node_id_list)
+    #print(fake_dic)
     print("Total simulation step: " + str(time - 1))
     print("### End of simulation ###")
     plt.clf()
@@ -365,8 +378,6 @@ if __name__ == "__main__":
   number_of_opportunistic_communication_list = [] # すれ違い通信数リスト
   moving_distance_list = []#総移動距離リスト
   time_list = []
-
-  fake_flag = False
 
   #edges_all_list = DG.edges()
   #create obstacles

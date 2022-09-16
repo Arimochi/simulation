@@ -160,12 +160,9 @@ class Car:
 
     #発見した障害物ノードidを保存
     if current_end_node_id not in self.obstacles_info_list:
-      self.fake_dic[current_end_node_id] = 1
+      #self.fake_dic[current_end_node_id] = 1
       #print(current_end_node_id)
       self.obstacles_info_list.append(current_end_node_id)
-    """if current_end_node_id not in self.fake_obstacles_info_list:
-      self.fake_dic['fake'] = 0
-      print("嘘")"""
     #現在の車線番号
     self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
     #print("今のノードの番号:"+str(self.shortest_path[self.current_sp_index]))
