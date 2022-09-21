@@ -222,6 +222,3 @@ class Car:
    # print('U_turn end!')
 
     return x_new, y_new
-
-  #偽情報を発信している車両の動き
-  #def fake_move(self):

@@ -192,7 +192,7 @@ def animate(time):
   xdata = []; ydata = []
   Fxdata = []; Fydata = []
 
-  #sleep(0.1)
+  sleep(0.1)
 
   for car in fakecars_list:
     if car.__class__.__name__ == 'Car':
@@ -225,8 +225,10 @@ def animate(time):
           cars_list.remove( car )
 
       # TODO: if the car encounters road closure, it U-turns.
-      if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20:
+      if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20 and car_forward_pt.fake_flag == False:
         x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
+        #print("通れない")
+        #print(car_forward_pt.fake_flag)
 
       xdata.append(x_new)
       ydata.append(y_new)
@@ -304,7 +306,7 @@ def animate(time):
       dic_1[i] = 1
     print(dic_1)
 
-    #print(obstacle_node_id_list)
+    print(obstacle_node_id_list)
     #print(fake_dic)
     print("Total simulation step: " + str(time - 1))
     print("### End of simulation ###")
@@ -384,7 +386,7 @@ if __name__ == "__main__":
   while True:
     for i in range(number_of_obstacles):
       obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
-      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
+      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, False)
       obstacle.init(DG)
       obstacles_list.append(obstacle)
       cars_list.append(obstacle)
@@ -397,7 +399,7 @@ if __name__ == "__main__":
   while True:
     for i in range(number_of_fake_obstacles):
       obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
-      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id)
+      obstacle = Obstacle(obstacle_node_id, obstacle_lane_id, True)
       obstacle.init(DG)
       fakeobs_list.append(obstacle)
       cars_list.append(obstacle)

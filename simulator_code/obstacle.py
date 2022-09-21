@@ -1,3 +1,4 @@
+from pickle import FALSE
 import networkx as nx
 import numpy as np
 import math
@@ -9,16 +10,22 @@ class Obstacle:
     #self.current_position = []
     #self.obstacle_node_id = obstacle_node_id
 
-  def __init__(self,obstacle_node_id, obstacle_lane_id):
-    self.obstacle_node_id = obstacle_node_id
-    self.obstacle_lane_id = obstacle_lane_id
+  def __init__(self,obstacle_node_id, obstacle_lane_id, fake_flag):
+    self.fake_flag = fake_flag
     self.current_position  = []
-    self.fakeobs_node_id = obstacle_node_id
-    self.fakeobs_lane_id = obstacle_lane_id
+    if fake_flag == False:
+      self.obstacle_node_id = obstacle_node_id
+      self.obstacle_lane_id = obstacle_lane_id
+    else:
+      self.fakeobs_node_id = obstacle_node_id
+      self.fakeobs_lane_id = obstacle_lane_id
 
 
   def init(self, DG):
-    current_node_id = self.obstacle_node_id
+    if self.fake_flag == False:
+      current_node_id = self.obstacle_node_id
+    else:
+      current_node_id = self.fakeobs_node_id
     self.current_position = DG.nodes[ current_node_id ]["pos"]
 
   def move(self):
