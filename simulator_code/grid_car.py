@@ -1,3 +1,4 @@
+from cgi import print_arguments
 import networkx as nx
 import numpy as np
 import math
@@ -25,11 +26,6 @@ class Car:
     self.goal_arrived = False
     self.DG_copied = copy.deepcopy(DG)
     self.opportunistic_communication_frag = True
-
-    self.fake_obstacles_info_list = [] #偽の通行不能箇所
-    self.fake_car = False #一般車両と悪意のある車両を判別
-
-    self.fake_dic = {}
 
   #車線に関するパラメータ
   def init(self, DG):
@@ -160,8 +156,6 @@ class Car:
 
     #発見した障害物ノードidを保存
     if current_end_node_id not in self.obstacles_info_list:
-      #self.fake_dic[current_end_node_id] = 1
-      #print(current_end_node_id)
       self.obstacles_info_list.append(current_end_node_id)
     #現在の車線番号
     self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]

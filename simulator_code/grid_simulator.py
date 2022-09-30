@@ -3,7 +3,7 @@
 
 ### import modules ###
 from asyncore import read
-from cgi import test
+from cgi import print_arguments, test
 from tkinter import X
 import xml.etree.ElementTree as ET
 import sys
@@ -36,10 +36,10 @@ number_of_obstacles = 5
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
-number_of_fake_cars = 5 #悪意のある車両数
-number_of_fake_obstacles = 2 #偽の通行不能箇所の数
+number_of_fake_cars = 1 #悪意のある車両数
+number_of_fake_obstacles = 1 #偽の通行不能箇所の数
 
-print(number_of_cars,number_of_fake_cars,number_of_obstacles,oppcomm_rate)
+print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles,oppcomm_rate)
 # functions
 #xmlファイルを読み込み
 def read_parse_netxml(infilename):
@@ -194,7 +194,10 @@ def animate(time):
     if car.__class__.__name__ == 'Car':
       time_list.append(time)
       x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist  = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
-
+      #print(car.obstacles_info_list)
+      #car.obstacles_info_list = car.fakeobs_node_id
+      #print(car.obstacles_info_list)
+      
       if car.goal_arrived == True:
           number_of_shortest_path_changes_list.append(car.number_of_shortest_path_changes)
           number_of_opportunistic_communication_list.append(car.number_of_opportunistic_communication)
@@ -221,11 +224,13 @@ def animate(time):
           cars_list.remove( car )
 
       # TODO: if the car encounters road closure, it U-turns.
+      #障害物があればUターン
       if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20:
         if car_forward_pt.fake_flag == False:
           x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
-        else:
-          print("偽の障害物")
+        #偽の障害物ならmove
+        """else:
+          print("偽の障害物")"""
         #print(car_forward_pt.fake_flag)
       
       xdata.append(x_new)
@@ -243,6 +248,7 @@ def animate(time):
                   oc_lane = edge_lanes_list[i]
 
           for oncoming_car in edges_cars_dic[(x_y_dic[(oc_lane.node_x_list[0], oc_lane.node_y_list[0])],x_y_dic[(oc_lane.node_x_list[1], oc_lane.node_y_list[1])])]:
+            
             if oncoming_car.__class__.__name__ =="Car" and len(oncoming_car.obstacles_info_list) >= 1 and oncoming_car.opportunistic_communication_frag == True:
               for i in oncoming_car.obstacles_info_list:
                 if i not in car.obstacles_info_list:
@@ -288,13 +294,13 @@ def animate(time):
     fakeobs_y.append(y_new)
 
   # check if all the cars arrive at their destinations
-  if len(cars_list) - number_of_obstacles -number_of_fake_cars == 0:
+  if len(cars_list) - number_of_obstacles - number_of_fake_obstacles == 0:
     #print("経路変更回数"+str(number_of_shortest_path_changes_list))
     #print("すれ違い通信回数"+str(number_of_opportunistic_communication_list))
     #print("ゴールタイム"+str(goal_time_list))
     #print("総移動距離"+str(moving_distance_list))
 
-    #print(fake_dic)
+    #print(edges_cars_dic)
     print("Total simulation step: " + str(time - 1))
     print("### End of simulation ###")
     plt.clf()
@@ -328,7 +334,7 @@ def animate(time):
   line2.set_data(obstacle_x, obstacle_y)
   line3.set_data(Fxdata, Fydata)
   line4.set_data(fakeobs_x, fakeobs_y)
-  title.set_text("Simulation step: " + str(time) + ";  # of cars: " + str(len(cars_list) - number_of_obstacles))
+  title.set_text("Simulation step: " + str(time) + ";  # of cars: " + str(len(cars_list) - number_of_obstacles - number_of_fake_obstacles))
 
   return line1, line2, line3, line4, title,
 
@@ -353,6 +359,7 @@ if __name__ == "__main__":
   for item in edges_all_list:
     edges_obstacles_dic[ item ] = []
     edges_cars_dic[ item ] = []
+  #print(edges_cars_dic)
 
 
   obstacles_list = []
@@ -392,6 +399,7 @@ if __name__ == "__main__":
       cars_list.append(obstacle)
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+      #print(edges_cars_dic)
     if nx.is_weakly_connected(DG) == True:
       break
 
