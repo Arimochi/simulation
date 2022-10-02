@@ -300,7 +300,6 @@ def animate(time):
     #print("ゴールタイム"+str(goal_time_list))
     #print("総移動距離"+str(moving_distance_list))
 
-    #print(edges_cars_dic)
     print("Total simulation step: " + str(time - 1))
     print("### End of simulation ###")
     plt.clf()
@@ -368,6 +367,7 @@ if __name__ == "__main__":
   pair_node_id_list = []
   cars_list = []
   fakecars_list = []
+  obstacle_dic = {}
 
   goal_time_list = [] # 移動完了時間リスト
   number_of_shortest_path_changes_list = [] # 経路変更数リスト
@@ -386,6 +386,8 @@ if __name__ == "__main__":
       cars_list.append(obstacle)
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
+      obstacle_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])] = False
+      #print(obstacle_dic)
     if nx.is_weakly_connected(DG) == True:
       break
 
@@ -399,7 +401,8 @@ if __name__ == "__main__":
       cars_list.append(obstacle)
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-      #print(edges_cars_dic)
+      obstacle_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])] = True
+      #print(obstacle_dic)
     if nx.is_weakly_connected(DG) == True:
       break
 
@@ -479,6 +482,7 @@ if __name__ == "__main__":
 
 
   print("### Start of simulation ###")
+  print(obstacle_dic)
   ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)
   #ani.save("grid-sanimation.mp4", writer="ffmpeg")
   plt.show()
