@@ -11,7 +11,6 @@ class Obstacle:
 
   def __init__(self,obstacle_node_id, obstacle_lane_id, fake_flag):
     self.fake_flag = fake_flag
-    self.obstacle_dic = {}
     self.current_position  = []
     if fake_flag == False:
       self.obstacle_node_id = obstacle_node_id
@@ -24,14 +23,11 @@ class Obstacle:
   def init(self, DG):
     if self.fake_flag == False:
       current_node_id = self.obstacle_node_id
-      self.obstacle_dic[current_node_id] = self.fake_flag
       print("通行不能箇所" + str(current_node_id))
     else:
       current_node_id = self.fakeobs_node_id
-      self.obstacle_dic[current_node_id] = self.fake_flag
       print("偽の通行不能箇所" + str(current_node_id))
     self.current_position = DG.nodes[ current_node_id ]["pos"]
-    print(self.obstacle_dic)
 
   def move(self):
     x_new = self.current_position[0]

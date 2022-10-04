@@ -36,7 +36,7 @@ oppcomm_rate = 1.0
 sensitivity = 1.0
 
 number_of_fake_cars = 1 #悪意のある車両数
-number_of_fake_obstacles = 1 #偽の通行不能箇所の数
+number_of_fake_obstacles = 5 #偽の通行不能箇所の数
 
 print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles,oppcomm_rate)
 # functions
@@ -187,7 +187,7 @@ def animate(time):
   xdata = []; ydata = []
   Fxdata = []; Fydata = []
 
-  #sleep(0.1)
+  sleep(0.1)
 
   for car in fakecars_list:
     if car.__class__.__name__ == 'Car':
@@ -248,20 +248,25 @@ def animate(time):
           for oncoming_car in edges_cars_dic[(x_y_dic[(oc_lane.node_x_list[0], oc_lane.node_y_list[0])],x_y_dic[(oc_lane.node_x_list[1], oc_lane.node_y_list[1])])]:
             
             if oncoming_car.__class__.__name__ =="Car" and len(oncoming_car.obstacles_info_list) >= 1 and oncoming_car.opportunistic_communication_frag == True:
+              #print("すれ違い通信の判定")
+              #print(car.obstacles_info_list)
               for i in oncoming_car.obstacles_info_list:
                 if i not in car.obstacles_info_list:
                   #print("すれ違い通信開始")
                   car.number_of_opportunistic_communication += 1
                   car.obstacles_info_list.append(i)
+                  
                   a = x_y_dic[(edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_x_list[0],edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_y_list[0])]
-                  if car.DG_copied.has_edge(a, car.obstacles_info_list[-1]) == True:
-                    car.DG_copied.remove_edge(a, car.obstacles_info_list[-1])
+                  #print(a)
+                  if car.DG_copied.has_node(i) == True:
+                    car.DG_copied.remove_node(i)
                     #print((car.current_position[0], car.current_position[1]) in x_y_dic)
                     #現在地がcurrent_end_node_idのときの条件を追加
                     if (car.current_position[0], car.current_position[1]) in x_y_dic and x_y_dic[(car.current_position[0], car.current_position[1])] == car.shortest_path[car.current_sp_index + 1]:
                       #経路の再計算
                       try:
                         car.shortest_path = nx.dijkstra_path(car.DG_copied, x_y_dic[(car.current_position[0], car.current_position[1])], destination_node_id) #current_start_node_id?
+                        print("最短経路計算")
                         break
 
                       except Exception:
@@ -419,7 +424,7 @@ if __name__ == "__main__":
         origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
 
     shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)
-    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
+    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG, False)
     car.init(DG)  # initialization of car settings
     cars_list.append(car)
     edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
@@ -437,10 +442,17 @@ if __name__ == "__main__":
         origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
 
     shortest_path = nx.dijkstra_path(DG, origin_node_id, destination_node_id)
-    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG)
+    car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG, True)
     car.init(DG)  # initialization of car settings
     fakecars_list.append(car)
     edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
+    for j in range(number_of_fake_obstacles):
+      for k, v in obstacle_dic.items():
+        if v == True:
+          car.obstacle_dic[k] = True
+          car.obstacles_info_list.append(k)
+      print(car.obstacle_dic)
+      print(car.obstacles_info_list)
     #if oppcomm_rate * number_of_cars < i: #車両の割合ですれ違いのフラグのon/off
       #car.opportunistic_communication_frag = False
 

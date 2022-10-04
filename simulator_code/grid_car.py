@@ -5,7 +5,7 @@ import copy
 import pprint
 
 class Car:
-  def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG):
+  def __init__(self, orig_node_id, dest_node_id, dest_lane_id, shortest_path, current_lane_id, DG, fakecar_flag):
     self.orig_node_id  = orig_node_id #起点
     self.dest_node_id  = dest_node_id #終点
     self.dest_lane_id = dest_lane_id
@@ -25,6 +25,9 @@ class Car:
     self.goal_arrived = False
     self.DG_copied = copy.deepcopy(DG)
     self.opportunistic_communication_frag = True
+
+    self.obstacle_dic = {}
+    self.fakecar_flag = fakecar_flag
 
   #車線に関するパラメータ
   def init(self, DG):
@@ -156,7 +159,7 @@ class Car:
     #発見した障害物ノードidを保存
     if current_end_node_id not in self.obstacles_info_list:
       self.obstacles_info_list.append(current_end_node_id)
-      print(self.obstacles_info_list)
+      #print(self.obstacles_info_list)
     #現在の車線番号
     self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
     #print("今のノードの番号:"+str(self.shortest_path[self.current_sp_index]))
