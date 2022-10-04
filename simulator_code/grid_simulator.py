@@ -3,7 +3,6 @@
 
 ### import modules ###
 from asyncore import read
-from cgi import print_arguments, test
 from tkinter import X
 import xml.etree.ElementTree as ET
 import sys
@@ -194,7 +193,6 @@ def animate(time):
     if car.__class__.__name__ == 'Car':
       time_list.append(time)
       x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist  = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
-      #print(car.obstacles_info_list)
       #car.obstacles_info_list = car.fakeobs_node_id
       #print(car.obstacles_info_list)
       
@@ -386,7 +384,7 @@ if __name__ == "__main__":
       cars_list.append(obstacle)
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-      obstacle_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])] = False
+      obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = False
       #print(obstacle_dic)
     if nx.is_weakly_connected(DG) == True:
       break
@@ -401,7 +399,7 @@ if __name__ == "__main__":
       cars_list.append(obstacle)
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
-      obstacle_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])] = True
+      obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = True
       #print(obstacle_dic)
     if nx.is_weakly_connected(DG) == True:
       break

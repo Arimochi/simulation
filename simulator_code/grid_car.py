@@ -1,4 +1,3 @@
-from cgi import print_arguments
 import networkx as nx
 import numpy as np
 import math
@@ -157,6 +156,7 @@ class Car:
     #発見した障害物ノードidを保存
     if current_end_node_id not in self.obstacles_info_list:
       self.obstacles_info_list.append(current_end_node_id)
+      print(self.obstacles_info_list)
     #現在の車線番号
     self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
     #print("今のノードの番号:"+str(self.shortest_path[self.current_sp_index]))
