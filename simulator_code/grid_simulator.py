@@ -3,6 +3,7 @@
 
 ### import modules ###
 from asyncore import read
+from importlib.resources import path
 from tkinter import X
 import xml.etree.ElementTree as ET
 import sys
@@ -187,6 +188,7 @@ def animate(time):
   xdata = []; ydata = []
   Fxdata = []; Fydata = []
   all_cars_list = []
+  short_path = []
 
   sleep(0.1)
 
@@ -264,15 +266,40 @@ def animate(time):
               for i in oncoming_car.obstacles_info_list:
                 if i not in car.obstacles_info_list:
                   #print("すれ違い通信開始")
-                  car.number_of_opportunistic_communication += 1
+                  #car.number_of_opportunistic_communication += 1
                   car.obstacles_info_list.append(i)
+                  if oncoming_car.fakecar_flag == False:
+                    car.number_of_opportunistic_communication += 1
+                    #print("安心")
+                  else:
+                    car.number_of_opportunistic_communication += 1
+                    #print("警告")
 
                   if i in car.shortest_path:
-                    if car.fakecar_flag == False:
+                    print("障害物" + str(i))
+                    print("最短経路" + str(car.shortest_path))
+                    for j in range(len(car.shortest_path)-1):
+                      short_path.append((car.shortest_path[j],car.shortest_path[j+1]))
+                    print("経路" + str(short_path))
+                    for j in short_path:
+                      if j[0] == i or j[1] == i:
+                        print(j)
+                        if car.DG_copied.has_edge(j[0],j[1]) == True:
+                          print("edgeの削除")
+                          car.DG_copied.remove_edge(j[0],j[1])
+
+
+                    #if car.DG_copied.has_edge(i) == True:
+                      #print(car.DG_copied.nodes(),car.DG_copied.edges())
+                      #car.DG_copied.remove_edge(i)
+
+                    """if car.fakecar_flag == False:
+                      car.number_of_opportunistic_communication += 1
                       #print(car.shortest_path, i)
-                      print("一般車両")
+                      #print("一般車両")
                     else:
-                      print("悪意のある車")
+                      car.number_of_opportunistic_communication += 1
+                      #print("悪意のある車")"""
                     
 
                   #a = x_y_dic[(edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_x_list[0],edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_y_list[0])]
@@ -343,6 +370,7 @@ def animate(time):
     # plt.show()
     plt.savefig("経路変更数.png")
     plt.clf()"""
+
 
     with open("result " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + ".csv", 'w', newline='') as f:
       writer = csv.writer(f)
@@ -500,7 +528,7 @@ if __name__ == "__main__":
 
   line1, = plt.plot([], [], color="green", marker="s", linestyle="", markersize=5)
   line2, = plt.plot([], [], color="red", marker="s", linestyle="", markersize=5)
-  line3, = plt.plot([], [], color="blue", marker="s", linestyle="", markersize=8)
+  line3, = plt.plot([], [], color="blue", marker="s", linestyle="", markersize=5)
   line4, = plt.plot([], [], color="cyan", marker="s", linestyle="", markersize=5)
   title = ax.text(20.0, -20.0, "", va="center")
 
