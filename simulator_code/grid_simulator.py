@@ -3,7 +3,6 @@
 
 ### import modules ###
 from asyncore import read
-from importlib.resources import path
 from tkinter import X
 import xml.etree.ElementTree as ET
 import sys
@@ -188,7 +187,7 @@ def animate(time):
   xdata = []; ydata = []
   Fxdata = []; Fydata = []
   all_cars_list = []
-  short_path = []
+  #short_path = []
 
   sleep(0.1)
 
@@ -279,15 +278,29 @@ def animate(time):
                     print("障害物" + str(i))
                     print("最短経路" + str(car.shortest_path))
                     for j in range(len(car.shortest_path)-1):
-                      short_path.append((car.shortest_path[j],car.shortest_path[j+1]))
-                    print("経路" + str(short_path))
-                    for j in short_path:
+                      car.short_path.append((car.shortest_path[j],car.shortest_path[j+1]))
+                    print("経路" + str(car.short_path))
+                    for j in car.short_path:
                       if j[0] == i or j[1] == i:
+                        current_start_node_id = car.shortest_path[car.current_sp_index - 1]
                         print(j)
                         if car.DG_copied.has_edge(j[0],j[1]) == True:
                           print("edgeの削除")
                           car.DG_copied.remove_edge(j[0],j[1])
-
+                        try:
+                          car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)
+                          print("経路の再計算")
+                          print("新最短経路" + str(car.shortest_path))
+                          break
+                        except Exception:
+                          print("その他")
+                          car.dest_lane_id = np.random.randint(len(edge_lanes_list))
+                          car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
+                          while car.dest_node_id in obstacle_node_id_list or car.current_lane_id == car.dest_lane_id:
+                            car.dest_lane_id = np.random.randint(len(edge_lanes_list))
+                            car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
+                        car.current_sp_index = 0
+                        car.number_of_shortest_path_changes += 1
 
                     #if car.DG_copied.has_edge(i) == True:
                       #print(car.DG_copied.nodes(),car.DG_copied.edges())
