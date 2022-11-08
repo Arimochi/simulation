@@ -31,7 +31,7 @@ infilename = "grid3x3.net.xml"
 #input parameters
 
 number_of_cars = 50
-number_of_obstacles = 3
+number_of_obstacles = 5
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
@@ -281,26 +281,41 @@ def animate(time):
                       car.short_path.append((car.shortest_path[j],car.shortest_path[j+1]))
                     print("経路" + str(car.short_path))
                     for j in car.short_path:
-                      if j[0] == i or j[1] == i:
-                        current_start_node_id = car.shortest_path[car.current_sp_index - 1]
+                      if j[1] == i:
                         print(j)
                         if car.DG_copied.has_edge(j[0],j[1]) == True:
                           print("edgeの削除")
                           car.DG_copied.remove_edge(j[0],j[1])
-                        try:
-                          car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)
-                          print("経路の再計算")
-                          print("新最短経路" + str(car.shortest_path))
-                          break
-                        except Exception:
-                          print("その他")
-                          car.dest_lane_id = np.random.randint(len(edge_lanes_list))
-                          car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
-                          while car.dest_node_id in obstacle_node_id_list or car.current_lane_id == car.dest_lane_id:
-                            car.dest_lane_id = np.random.randint(len(edge_lanes_list))
-                            car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
-                        car.current_sp_index = 0
-                        car.number_of_shortest_path_changes += 1
+
+                        print(car.shortest_path)
+                        current_start_node_id = car.shortest_path[car.current_sp_index - 1]
+                        print("current_start_node_id" + str(current_start_node_id))
+                        print("目的地" + str(car.dest_node_id))
+                        if j[1] != car.shortest_path[car.current_sp_index + 1]:
+                          try:
+                            car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)
+                            car.current_sp_index = 0
+                            print("経路の再計算")
+                            print("新最短経路" + str(car.shortest_path))
+                            print("-------------------")
+
+                            current_start_node_id = car.shortest_path[car.current_sp_index]
+                            car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]
+                            car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]
+                            current_end_node_id = car.shortest_path[car.current_sp_index + 1]
+                            car.current_end_node = car.DG_copied.nodes[current_end_node_id]["pos"]
+                            current_edge_attributes = car.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)
+                            car.current_max_speed = current_edge_attributes["speed"]
+                            car.current_distance = current_edge_attributes["weight"]
+                            edges_cars_dic[(current_start_node_id, current_end_node_id)].append(car)
+                          except:
+                            print("スルー")
+                            print("-------------------")
+
+                        else:
+                          print("スルー")
+                          print("-------------------")
+                        
 
                     #if car.DG_copied.has_edge(i) == True:
                       #print(car.DG_copied.nodes(),car.DG_copied.edges())
