@@ -38,6 +38,9 @@ sensitivity = 1.0
 number_of_fake_cars = 1 #悪意のある車両数
 number_of_fake_obstacles = 1 #偽の通行不能箇所の数
 
+math_count = 0
+avoid_count = 0
+
 print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles,oppcomm_rate)
 # functions
 #xmlファイルを読み込み
@@ -177,39 +180,19 @@ def init():
   line3.set_data([], [])
   line4.set_data([], [])
   title.set_text("Simulation step: 0")
-  return line1, line2, line3, title,
+  return line1, line2, line3, title
 
 # main of animation update
 def animate(time):
-  global xdata,ydata,obstacle_x,obstacle_y,Fxdata,Fydata
+  global xdata,ydata,obstacle_x,obstacle_y,Fxdata,Fydata,avoid_count,math_count,passing_comunication
   global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list
 
   xdata = []; ydata = []
   Fxdata = []; Fydata = []
   all_cars_list = []
-  #short_path = []
-
-  sleep(0.1)
-
-  """for car in fakecars_list:
-    if car.__class__.__name__ == 'Car':
-      time_list.append(time)
-      x_new, y_new, goal_arrived_flag, car_forward_pt, diff_dist  = car.move(edges_cars_dic, sensitivity, lane_dic, edge_length_dic)
-      #car.obstacles_info_list = car.fakeobs_node_id
-      #print(car.obstacles_info_list)
-      
-      if car.goal_arrived == True:
-          number_of_shortest_path_changes_list.append(car.number_of_shortest_path_changes)
-          number_of_opportunistic_communication_list.append(car.number_of_opportunistic_communication)
-          goal_time_list.append(car.elapsed_time)
-          moving_distance_list.append(round(car.moving_distance,1))
-          fakecars_list.remove( car )
-      #if car_forward_pt.__class__.__name__ != "Car" and diff_dist <= 20 :
-        #x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
-
-    Fxdata.append(x_new)
-    Fydata.append(y_new)"""
   
+  #sleep(0.1)
+
   all_cars_list = cars_list + fakecars_list
 
   for car in all_cars_list:
@@ -268,10 +251,10 @@ def animate(time):
                   #car.number_of_opportunistic_communication += 1
                   car.obstacles_info_list.append(i)
                   if oncoming_car.fakecar_flag == False:
-                    car.number_of_opportunistic_communication += 1
+                    passing_comunication += 1
                     #print("安心")
                   else:
-                    car.number_of_opportunistic_communication += 1
+                    passing_comunication += 1
                     #print("警告")
 
                   if i in car.shortest_path:
@@ -279,56 +262,61 @@ def animate(time):
                     print("最短経路" + str(car.shortest_path))
                     for j in range(len(car.shortest_path)-1):
                       car.short_path.append((car.shortest_path[j],car.shortest_path[j+1]))
-                    print("経路" + str(car.short_path))
+                    #print("経路" + str(car.short_path))
                     for j in car.short_path:
                       if j[1] == i:
-                        print(j)
-                        if car.DG_copied.has_edge(j[0],j[1]) == True:
-                          print("edgeの削除")
-                          car.DG_copied.remove_edge(j[0],j[1])
-
-                        print(car.shortest_path)
-                        current_start_node_id = car.shortest_path[car.current_sp_index - 1]
-                        print("current_start_node_id" + str(current_start_node_id))
-                        print("目的地" + str(car.dest_node_id))
+                        #print(j)
+                        #print(car.DG_copied)
+                        print(car)
+                        #if car.DG_copied.has_edge(j[0],j[1]) == True:
+                          #print("edgeの削除:" + str(j))
+                          #car.DG_copied.remove_edge(j[0],j[1])
+                          
+                        #current_start_node_id = car.shortest_path[car.current_sp_index - 1]
+                        
                         if j[1] != car.shortest_path[car.current_sp_index + 1]:
+                          #car.current_sp_index += 1
+                          if car.DG_copied.has_edge(j[0],j[1]) == True:
+                            car.DG_copied.remove_edge(j[0],j[1])
                           try:
+                            car.current_sp_index += 1
+                            current_start_node_id = car.shortest_path[car.current_sp_index - 1]
+                            print("現在地:" + str(current_start_node_id) + " 目的地:" + str(car.dest_node_id))
                             car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)
                             car.current_sp_index = 0
-                            print("経路の再計算")
+                            math_count += 1
+                            #print("再計算" + str(math_count))
                             print("新最短経路" + str(car.shortest_path))
-                            print("-------------------")
+                            #print("-------------------")
 
                             current_start_node_id = car.shortest_path[car.current_sp_index]
                             car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]
                             car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]
                             current_end_node_id = car.shortest_path[car.current_sp_index + 1]
+                            print(current_start_node_id, current_end_node_id)
                             car.current_end_node = car.DG_copied.nodes[current_end_node_id]["pos"]
                             current_edge_attributes = car.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)
                             car.current_max_speed = current_edge_attributes["speed"]
                             car.current_distance = current_edge_attributes["weight"]
                             edges_cars_dic[(current_start_node_id, current_end_node_id)].append(car)
+                            
+                            print("-------------------")
                           except:
-                            print("スルー")
+                            avoid_count += 1
+                            print("スルー1")
+                            #print("スルーした回数" + str(avoid_count))
                             print("-------------------")
 
                         else:
-                          print("スルー")
+                          x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
+                          avoid_count += 1
+                          print("スルー2")
+                          #print("スルーした回数" + str(avoid_count))
                           print("-------------------")
-                        
 
                     #if car.DG_copied.has_edge(i) == True:
                       #print(car.DG_copied.nodes(),car.DG_copied.edges())
                       #car.DG_copied.remove_edge(i)
-
-                    """if car.fakecar_flag == False:
-                      car.number_of_opportunistic_communication += 1
-                      #print(car.shortest_path, i)
-                      #print("一般車両")
-                    else:
-                      car.number_of_opportunistic_communication += 1
-                      #print("悪意のある車")"""
-                    
 
                   #a = x_y_dic[(edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_x_list[0],edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_y_list[0])]
                   #print(a)
@@ -336,23 +324,7 @@ def animate(time):
                     #car.DG_copied.remove_node(i)
                     #print((car.current_position[0], car.current_position[1]) in x_y_dic)
                     #現在地がcurrent_end_node_idのときの条件を追加
-                  """if (car.current_position[0], car.current_position[1]) in x_y_dic and x_y_dic[(car.current_position[0], car.current_position[1])] == car.shortest_path[car.current_sp_index + 1]:
-                      #経路の再計算
-                      try:
-                        car.shortest_path = nx.dijkstra_path(car.DG_copied, x_y_dic[(car.current_position[0], car.current_position[1])], destination_node_id) #current_start_node_id?
-                        print("最短経路計算")
-                        break
-
-                      except Exception:
-                        destination_lane_id = np.random.randint(len(edge_lanes_list))
-                        destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]
-                        while destination_node_id in obstacle_node_id_list or car.current_lane_id == destination_lane_id:
-                          destination_lane_id = np.random.randint(len(edge_lanes_list))
-                          destination_node_id = x_y_dic[(edge_lanes_list[destination_lane_id].node_x_list[-1], edge_lanes_list[destination_lane_id].node_y_list[-1])]
-                      car.current_sp_index = 0
-                      car.number_of_shortest_path_changes += 1"""
-
-
+                  
     #elif car.__class__.__name__ == 'Obstacle':
      # print("Obstacle #%d instance is called, skip!!!" % (car.obstacle_node_id))
     #elif car.__class__.__name__ == "Fire":
@@ -379,6 +351,7 @@ def animate(time):
 
     print("Total simulation step: " + str(time - 1))
     print("### End of simulation ###")
+    print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
     plt.clf()
 
     plt.hist(moving_distance_list, bins=50, rwidth=0.9, color='b')
@@ -452,6 +425,10 @@ if __name__ == "__main__":
   number_of_opportunistic_communication_list = [] # すれ違い通信数リスト
   moving_distance_list = []#総移動距離リスト
   time_list = []
+
+  avoid_count = 0
+  math_count = 0
+  passing_comunication = 0
 
   #edges_all_list = DG.edges()
   #create obstacles
@@ -527,8 +504,8 @@ if __name__ == "__main__":
         if v == True:
           car.obstacle_dic[k] = True
           car.obstacles_info_list.append(k)
-      print("偽の通行不能箇所の辞書" + str(car.obstacle_dic))
-      print("偽の通行不能箇所のリスト" + str(car.obstacles_info_list))
+      #print("偽の通行不能箇所の辞書" + str(car.obstacle_dic))
+      #print("偽の通行不能箇所のリスト" + str(car.obstacles_info_list))
     if oppcomm_rate * number_of_fake_cars < i: #車両の割合ですれ違いのフラグのon/off
       car.opportunistic_communication_frag = False
 
@@ -567,8 +544,9 @@ if __name__ == "__main__":
   draw_road_network(DG)
 
 
-  print("### Start of simulation ###")
   print("通行不能箇所の辞書" + str(obstacle_dic))
+  print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
+  print("### Start of simulation ###")
   ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)
   #ani.save("grid-sanimation.mp4", writer="ffmpeg")
   plt.show()

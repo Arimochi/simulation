@@ -23,10 +23,10 @@ class Obstacle:
   def init(self, DG):
     if self.fake_flag == False:
       current_node_id = self.obstacle_node_id
-      print("通行不能箇所" + str(current_node_id))
+      #print("通行不能箇所" + str(current_node_id))
     else:
       current_node_id = self.fakeobs_node_id
-      print("偽の通行不能箇所" + str(current_node_id))
+      #print("偽の通行不能箇所" + str(current_node_id))
     self.current_position = DG.nodes[ current_node_id ]["pos"]
 
   def move(self):
