@@ -26,6 +26,7 @@ class Car:
     self.DG_copied = copy.deepcopy(DG)
     self.opportunistic_communication_frag = True
 
+    self.ct_point = 0
     self.short_path = []
     self.obstacle_dic = {}
     self.fakecar_flag = fakecar_flag

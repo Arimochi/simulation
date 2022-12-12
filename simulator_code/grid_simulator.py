@@ -21,22 +21,22 @@ from grid_road_segment import RoadSegment
 from obstacle import Obstacle
 
 ### simulation settings ###
-infilename = "grid3x3.net.xml"
-#infilename = "grid5x5.net.xml"
+#infilename = "grid3x3.net.xml"
+infilename = "grid5x5.net.xml"
 #infilename = "tsudanuma.net.xml"
 #infilename = "sfc_small.net.xml"
 
 #opportunistic_communication_frag = True
-#np.random.seed(12345)
+np.random.seed(12345)
 #input parameters
 
-number_of_cars = 50
+number_of_cars = 300
 number_of_obstacles = 5
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
-number_of_fake_cars = 1 #悪意のある車両数
-number_of_fake_obstacles = 1 #偽の通行不能箇所の数
+number_of_fake_cars = 0 #悪意のある車両数
+number_of_fake_obstacles = 0 #偽の通行不能箇所の数
 
 math_count = 0
 avoid_count = 0
@@ -258,6 +258,8 @@ def animate(time):
                     #print("警告")
 
                   if i in car.shortest_path:
+                    print("-------------------")
+                    print(car)
                     print("障害物" + str(i))
                     print("最短経路" + str(car.shortest_path))
                     for j in range(len(car.shortest_path)-1):
@@ -267,7 +269,6 @@ def animate(time):
                       if j[1] == i:
                         #print(j)
                         #print(car.DG_copied)
-                        print(car)
                         #if car.DG_copied.has_edge(j[0],j[1]) == True:
                           #print("edgeの削除:" + str(j))
                           #car.DG_copied.remove_edge(j[0],j[1])
@@ -278,22 +279,24 @@ def animate(time):
                           #car.current_sp_index += 1
                           if car.DG_copied.has_edge(j[0],j[1]) == True:
                             car.DG_copied.remove_edge(j[0],j[1])
+                          #if car.DG_copied.has_edge(j[0],j[1]) == False:
+                            #car.DG_copied.add_edge(j[0],j[1])
                           try:
                             car.current_sp_index += 1
                             current_start_node_id = car.shortest_path[car.current_sp_index - 1]
                             print("現在地:" + str(current_start_node_id) + " 目的地:" + str(car.dest_node_id))
                             car.shortest_path = nx.dijkstra_path(car.DG_copied, current_start_node_id, car.dest_node_id)
+                            car.ct_point += 1
                             car.current_sp_index = 0
                             math_count += 1
                             #print("再計算" + str(math_count))
                             print("新最短経路" + str(car.shortest_path))
-                            #print("-------------------")
 
                             current_start_node_id = car.shortest_path[car.current_sp_index]
                             car.current_start_node = car.DG_copied.nodes[current_start_node_id]["pos"]
                             car.current_position = car.DG_copied.nodes[current_start_node_id]["pos"]
                             current_end_node_id = car.shortest_path[car.current_sp_index + 1]
-                            print(current_start_node_id, current_end_node_id)
+                            #print(current_start_node_id, current_end_node_id)
                             car.current_end_node = car.DG_copied.nodes[current_end_node_id]["pos"]
                             current_edge_attributes = car.DG_copied.get_edge_data(current_start_node_id, current_end_node_id)
                             car.current_max_speed = current_edge_attributes["speed"]
@@ -301,22 +304,23 @@ def animate(time):
                             edges_cars_dic[(current_start_node_id, current_end_node_id)].append(car)
                             
                             print("-------------------")
-                          except:
+                          except Exception:
+                            #car.dest_lane_id = np.random.randint(len(edge_lanes_list))
+                            #car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
+                            #while car.dest_node_id in obstacle_node_id_list or car.current_lane_id == car.dest_lane_id:
+                              #car.dest_lane_id = np.random.randint(len(edge_lanes_list))
+                              #car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
                             avoid_count += 1
                             print("スルー1")
                             #print("スルーした回数" + str(avoid_count))
                             print("-------------------")
 
                         else:
+                          print("スルー2")
                           x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
                           avoid_count += 1
-                          print("スルー2")
                           #print("スルーした回数" + str(avoid_count))
                           print("-------------------")
-
-                    #if car.DG_copied.has_edge(i) == True:
-                      #print(car.DG_copied.nodes(),car.DG_copied.edges())
-                      #car.DG_copied.remove_edge(i)
 
                   #a = x_y_dic[(edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_x_list[0],edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_y_list[0])]
                   #print(a)
@@ -355,11 +359,11 @@ def animate(time):
     plt.clf()
 
     plt.hist(moving_distance_list, bins=50, rwidth=0.9, color='b')
-    plt.savefig("総移動距離 " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + ".png")
+    plt.savefig("総移動距離 " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake" + str(number_of_fake_obstacles) + ".png")
     plt.clf()
 
     plt.hist(goal_time_list, bins=50, rwidth=0.9, color='b')
-    plt.savefig("ゴールタイム " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + ".png")
+    plt.savefig("ゴールタイム " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake" + str(number_of_fake_obstacles) + ".png")
     plt.clf()
 
     """plt.hist(number_of_opportunistic_communication_list, bins=50,rwidth=0.9, color='b')
