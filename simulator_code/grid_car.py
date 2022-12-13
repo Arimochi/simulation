@@ -26,7 +26,6 @@ class Car:
     self.DG_copied = copy.deepcopy(DG)
     self.opportunistic_communication_frag = True
 
-    self.ct_point = 0
     self.short_path = []
     self.obstacle_dic = {}
     self.fakecar_flag = fakecar_flag
@@ -142,7 +141,10 @@ class Car:
         car_forward_pt = edges_cars_dic[(current_start_node_id, current_end_node_id)][car_forward_index]
         diff_dist = 50.0
       self.update_current_speed(sensitivity, diff_dist)
-      self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
+      if self.shortest_path[self.current_sp_index] not in lane_dic:
+        print("KeyError : " + str(self.shortest_path[self.current_sp_index]) + "sub" + str(self.current_sp_index))
+      else:
+        self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]
     return x_new, y_new, self.goal_arrived, car_forward_pt, diff_dist
 
   def U_turn(self, edges_cars_dic,lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list):
