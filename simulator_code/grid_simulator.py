@@ -27,11 +27,11 @@ infilename = "grid5x5.net.xml"
 #infilename = "sfc_small.net.xml"
 
 #opportunistic_communication_frag = True
-np.random.seed(12345)
+np.random.seed(123456)
 #input parameters
 
-number_of_cars = 300
-number_of_obstacles = 10
+number_of_cars = 600
+number_of_obstacles = 15
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
@@ -214,7 +214,7 @@ def animate(time):
             cars_list.remove( car )
           if car.fakecar_flag == True:
             cars_list.remove( car )
-            print("悪意のある車の削除" + str(len(cars_list) - number_of_obstacles - number_of_fake_obstacles) + " ," + str(len(all_cars_list) - number_of_obstacles - number_of_fake_obstacles))
+            print("悪意のある車の削除")
             #fakecars_list.remove( car )
 
       # TODO: if the car encounters road closure, it U-turns.
@@ -349,9 +349,17 @@ def animate(time):
     x_new,y_new = obstacle.move()
     fakeobs_x.append(x_new)
     fakeobs_y.append(y_new)
-
+  
+  if time == 500:
+    print("残っている車両の確認")
+    print(cars_list)
+    print(cars_list[17])
+    print(cars_list[17].shortest_path)
+    print("現在地" + str(cars_list[17].shortest_path[cars_list[17].current_sp_index]))
+    print("強制終了")
+    sys.exit(0)
   # check if all the cars arrive at their destinations
-  if goal_count == 301:
+  if len(cars_list) - number_of_obstacles - number_of_fake_obstacles == 0:
     #print("経路変更回数"+str(number_of_shortest_path_changes_list))
     #print("すれ違い通信回数"+str(number_of_opportunistic_communication_list))
     #print("ゴールタイム"+str(goal_time_list))
@@ -381,7 +389,7 @@ def animate(time):
     plt.clf()"""
 
 
-    with open("result " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + ".csv", 'w', newline='') as f:
+    with open("result " + infilename + " oppcommrate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake" + str(number_of_fake_cars) + ".csv", 'w', newline='') as f:
       writer = csv.writer(f)
       for i in range(number_of_cars):
         writer.writerow([goal_time_list[i], moving_distance_list[i]])
