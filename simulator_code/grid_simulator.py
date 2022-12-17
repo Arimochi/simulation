@@ -35,8 +35,8 @@ number_of_obstacles = 10
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
-number_of_fake_cars = 3 #悪意のある車両数
-number_of_fake_obstacles = 1 #偽の通行不能箇所の数
+number_of_fake_cars = 0 #悪意のある車両数
+number_of_fake_obstacles = 0 #偽の通行不能箇所の数
 
 math_count = 0
 avoid_count = 0
@@ -378,7 +378,6 @@ def animate(time):
     plt.savefig("経路変更数.png")
     plt.clf()"""
 
-
     with open("result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
       writer = csv.writer(f)
       for i in range(number_of_cars):
@@ -421,6 +420,7 @@ if __name__ == "__main__":
   obstacles_list = []
   fakeobs_list = []
   obstacle_node_id_list = []
+  fakeobs_node_id_list = []
   pair_node_id_list = []
   cars_list = []
   fakecars_list = []
@@ -464,7 +464,9 @@ if __name__ == "__main__":
       edges_obstacles_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       edges_cars_dic[(edge_lanes_list[obstacle_lane_id].node_id_list[0], edge_lanes_list[obstacle_lane_id].node_id_list[1])].append(obstacle)
       obstacle_dic[edge_lanes_list[obstacle_lane_id].node_id_list[1]] = True
+      fakeobs_node_id_list.append(obstacle_node_id_list[number_of_obstacles + i])
     #print(obstacle_dic)
+    #print(fakeobs_node_id_list)
     if nx.is_weakly_connected(DG) == True:
       break
 
