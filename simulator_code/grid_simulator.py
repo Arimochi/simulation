@@ -30,13 +30,13 @@ infilename = "grid5x5.net.xml"
 np.random.seed(123456)
 #input parameters
 
-number_of_cars = 600
+number_of_cars = 100
 number_of_obstacles = 10
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
-number_of_fake_cars = 0 #悪意のある車両数
-number_of_fake_obstacles = 0 #偽の通行不能箇所の数
+number_of_fake_cars = 1 #悪意のある車両数
+number_of_fake_obstacles = 1 #偽の通行不能箇所の数
 
 math_count = 0
 avoid_count = 0

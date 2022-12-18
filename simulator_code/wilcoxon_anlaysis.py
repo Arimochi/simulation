@@ -3,14 +3,16 @@
 import numpy as np
 
 ### read data ###
-#infilename1 = "result grid3x3.net.xml rate=1.0cars600obstacles10fake_cars0fake_obs0.csv"
-infilename1 = "result grid5x5.net.xml rate=1.0cars600obstacles10fake_cars0fake_obs0.csv"
-#infilename2 = "result grid3x3.net.xml rate=1.0cars600obstacles10fake_cars3fake_obs1.csv"
-infilename2 = "result grid5x5.net.xml rate=1.0cars600obstacles10fake_cars3fake_obs1.csv"
+#infilename1 = "result grid3x3.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
+infilename1 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
+#infilename2 = "result grid3x3.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
+infilename2 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
 
 duration_list1 = []
 distance_list1 = []
 infile1 = open(infilename1,"r",encoding="utf-8")
+#対応車両台数
+half_number_of_cars = 50
 line_counter = 0
 for line in infile1:
     if line_counter == 0:
@@ -29,7 +31,7 @@ duration_list1_sorted = sorted(duration_list1)[int(len(duration_list1)/2):]
 distance_list1_sorted = sorted(distance_list1)[int(len(duration_list1)/2):]
 duration_list_sorted1 = []
 distance_list_sorted1 = []
-for i in range(300):
+for i in range(half_number_of_cars):
     duration_list_sorted1.append((np.random.choice(duration_list1_sorted)))
     distance_list_sorted1.append((np.random.choice(distance_list1_sorted)))
 
@@ -54,7 +56,7 @@ duration_list2_sorted = sorted(duration_list2)[int(len(duration_list1)/2):]
 distance_list2_sorted = sorted(distance_list2)[int(len(duration_list1)/2):]
 duration_list_sorted2 = []
 distance_list_sorted2 = []
-for i in range(300):
+for i in range(half_number_of_cars):
     duration_list_sorted2.append((np.random.choice(duration_list2_sorted)))
     distance_list_sorted2.append((np.random.choice(distance_list2_sorted)))
 
