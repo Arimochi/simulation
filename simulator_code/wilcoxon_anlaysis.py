@@ -4,9 +4,11 @@ import numpy as np
 
 ### read data ###
 #infilename1 = "result grid3x3.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
-infilename1 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
+#infilename1 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
 #infilename2 = "result grid3x3.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
-infilename2 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
+#infilename2 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
+infilename1 = "result average.csv"
+infilename2 = "fake_result average.csv"
 
 duration_list1 = []
 distance_list1 = []
@@ -15,11 +17,11 @@ infile1 = open(infilename1,"r",encoding="utf-8")
 half_number_of_cars = 50
 line_counter = 0
 for line in infile1:
-    if line_counter == 0:
+    """if line_counter == 0:
         line_counter += 1
         continue
     if line[0] == "#":
-        break
+        break"""
 
     data_list = line.replace("¥n","").split(",")
     duration_list1.append(int(data_list[0]))
@@ -40,11 +42,11 @@ distance_list2 = []
 infile2 = open(infilename2,"r",encoding="utf-8")
 line_counter = 0
 for line in infile2:
-    if line_counter == 0:
+    """if line_counter == 0:
         line_counter += 1
         continue
     if line[0] == "#":
-        break
+        break"""
 
     data_list = line.replace("¥n","").split(",")
     duration_list2.append(int(data_list[0]))

@@ -21,8 +21,8 @@ for num in range(times):
     a = np.random.randint(12345,123456)
     #os.system("python grid_simulator.py " + str(a))
     os.system("python argv.py " + str(a))
-    file_dic[num] = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
+    #file_dic[num] = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
 
 #print(file_list)
 #print(file_list[1])
-print(file_dic)
+#print(file_dic)

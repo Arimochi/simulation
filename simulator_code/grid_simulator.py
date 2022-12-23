@@ -29,7 +29,7 @@ infilename = "grid5x5.net.xml"
 #opportunistic_communication_frag = True
 a = np.random.randint(12345,123456)
 #a = int(sys.argv[1])
-#print("seed値 : " + str(a))
+print("seed値 : " + str(a))
 np.random.seed(a)
 #input parameters
 
@@ -38,11 +38,15 @@ number_of_obstacles = 10
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
-number_of_fake_cars = 0 #悪意のある車両数
-number_of_fake_obstacles = 0 #偽の通行不能箇所の数
+number_of_fake_cars = 1 #悪意のある車両数
+number_of_fake_obstacles = 1 #偽の通行不能箇所の数
 
 math_count = 0
 avoid_count = 0
+
+file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + ".csv"
+#folder_name = "result"
+folder_name = "fake_result"
 
 print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles,oppcomm_rate)
 # functions
@@ -383,10 +387,12 @@ def animate(time):
     plt.savefig("経路変更数.png")
     plt.clf()"""
 
-    file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + ".csv"
+    #file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + ".csv"
+    #folder_name = "result"
+    #folder_name = "fake_result"
     #with open(str(a) + "result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
     #with open("result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
-    with open("result" + '/' + file_name, 'w', newline='') as f:
+    with open(folder_name + '/' + file_name, 'w', newline='') as f:
       writer = csv.writer(f)
       for i in range(number_of_cars):
         writer.writerow([goal_time_list[i], moving_distance_list[i]])
