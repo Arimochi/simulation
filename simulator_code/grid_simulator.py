@@ -27,7 +27,10 @@ infilename = "grid5x5.net.xml"
 #infilename = "sfc_small.net.xml"
 
 #opportunistic_communication_frag = True
-np.random.seed(123456)
+a = np.random.randint(12345,123456)
+#a = int(sys.argv[1])
+#print("seed値 : " + str(a))
+np.random.seed(a)
 #input parameters
 
 number_of_cars = 100
@@ -342,10 +345,12 @@ def animate(time):
   
   if time == 600:
     print("残っている車両の確認")
+    x = number_of_obstacles + number_of_fake_obstacles
     print(cars_list)
-    print(cars_list[16])
-    print(cars_list[16].shortest_path)
-    print("現在地" + str(cars_list[16].shortest_path[cars_list[16].current_sp_index]))
+    print(cars_list[x + 1])
+    print(cars_list[x + 1].shortest_path)
+    print("現在地" + str(cars_list[x + 1].shortest_path[cars_list[x + 1].current_sp_index]))
+    print("seed値 " + str(a))
     print("強制終了")
     sys.exit(0)
   # check if all the cars arrive at their destinations
@@ -378,7 +383,10 @@ def animate(time):
     plt.savefig("経路変更数.png")
     plt.clf()"""
 
-    with open("result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
+    file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + ".csv"
+    #with open(str(a) + "result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
+    #with open("result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
+    with open("result" + '/' + file_name, 'w', newline='') as f:
       writer = csv.writer(f)
       for i in range(number_of_cars):
         writer.writerow([goal_time_list[i], moving_distance_list[i]])
