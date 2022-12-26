@@ -142,7 +142,8 @@ class Car:
         diff_dist = 50.0
       self.update_current_speed(sensitivity, diff_dist)
       if self.shortest_path[self.current_sp_index] not in lane_dic:
-        print("KeyError : " + str(self.shortest_path[self.current_sp_index]) + "sub" + str(self.current_sp_index) + str(self))
+        None
+        #print("KeyError : " + str(self.shortest_path[self.current_sp_index]) + "sub" + str(self.current_sp_index) + str(self))
         #print(self.shortest_path)
       else:
         self.current_lane_id = lane_dic[self.shortest_path[self.current_sp_index]]

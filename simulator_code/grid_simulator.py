@@ -33,7 +33,7 @@ print("seed値 : " + str(a))
 np.random.seed(a)
 #input parameters
 
-number_of_cars = 100
+number_of_cars = 600
 number_of_obstacles = 10
 oppcomm_rate = 1.0
 sensitivity = 1.0
@@ -44,7 +44,7 @@ number_of_fake_obstacles = 1 #偽の通行不能箇所の数
 math_count = 0
 avoid_count = 0
 
-file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + ".csv"
+file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".csv"
 #folder_name = "result"
 folder_name = "fake_result"
 
@@ -311,6 +311,11 @@ def animate(time):
                               #print("-------------------")
                               break
                             except Exception:
+                              """car.dest_lane_id = np.random.randint(len(edge_lanes_list))
+                              car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
+                              while car.dest_node_id in obstacle_node_id_list or car.current_lane_id == car.dest_lane_id:
+                                car.dest_lane_id = np.random.randint(len(edge_lanes_list))
+                                car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[self.dest_lane_id].node_y_list[-1])]"""
                               avoid_count += 1
                               #print("スルー1")
                               #print("スルーした回数" + str(avoid_count))
@@ -348,13 +353,12 @@ def animate(time):
     fakeobs_y.append(y_new)
   
   if time == 600:
-    print("残っている車両の確認")
+    #print("残っている車両の確認")
     x = number_of_obstacles + number_of_fake_obstacles
-    print(cars_list)
-    print(cars_list[x + 1])
-    print(cars_list[x + 1].shortest_path)
-    print("現在地" + str(cars_list[x + 1].shortest_path[cars_list[x + 1].current_sp_index]))
-    print("seed値 " + str(a))
+    #print(cars_list)
+    #print(cars_list[x + 1])
+    #print(cars_list[x + 1].shortest_path)
+    #print("現在地" + str(cars_list[x + 1].shortest_path[cars_list[x + 1].current_sp_index]))
     print("強制終了")
     sys.exit(0)
   # check if all the cars arrive at their destinations

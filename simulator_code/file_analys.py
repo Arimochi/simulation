@@ -3,12 +3,19 @@
 import numpy as np
 import os
 import csv
+import matplotlib.pyplot as plt
 
+#変更箇所
+number_of_cars = 300
 dir = './result'
 #dir = './fake_result'
+output_name = "result average.csv"
+#output_name = "fake_result average.csv"
+folder_name = "result"
+#folder_name = "fake_result"
+
 #count_file = 0
 counter = 0
-number_of_cars = 100
 
 duration_list = []
 duration_all_list = []
@@ -16,9 +23,6 @@ duration_avg_list = []
 distance_list = []
 distance_all_list = []
 distance_avg_list = []
-
-output_name = "result average.csv"
-#output_name = "fake_result average.csv"
 
 for file_name in os.listdir(dir):
     file_path = os.path.join(dir,file_name)
@@ -73,8 +77,15 @@ for i in range(number_of_cars):
 #print("移動距離")
 #print(distance_list)
 #print(distance_avg_list)
+plt.hist(distance_avg_list, bins=50, rwidth=0.9, color='b')
+plt.savefig(folder_name  + '/' + "総移動距離の平均.png")
+plt.clf()
 
-with open(output_name, 'w', newline='') as f:
+plt.hist(duration_avg_list, bins=50, rwidth=0.9, color='b')
+plt.savefig(folder_name  + '/' + "ゴールタイムの平均.png")
+plt.clf()
+
+with open(folder_name  + '/' + output_name, 'w', newline='') as f:
     writer = csv.writer(f)
     for i in range(len(duration_avg_list)):
         writer.writerow([duration_avg_list[i],distance_avg_list[i]])
