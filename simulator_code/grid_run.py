@@ -14,8 +14,8 @@ file_list = []
 file_dic = {}
 #infile = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
 infile = "回目"
-dir = './result'
-#dir = './fake_result'
+#dir = './result'
+dir = './fake_result'
 
 #実行
 while(True):

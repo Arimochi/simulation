@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 
 #変更箇所
 number_of_cars = 300
-dir = './result'
-#dir = './fake_result'
-output_name = "result average.csv"
-#output_name = "fake_result average.csv"
-folder_name = "result"
-#folder_name = "fake_result"
+#dir = './result'
+dir = './fake_result'
+#output_name = "result average.csv"
+output_name = "fake_result average.csv"
+#folder_name = "result"
+folder_name = "fake_result"
 
 #count_file = 0
 counter = 0
@@ -67,9 +67,9 @@ for file_name in os.listdir(dir):
 
 
 for i in range(number_of_cars):
-    duration_avg_list.append(int(duration_list[i]/counter))
+    duration_avg_list.append(int(duration_list[i]/(counter-1)))
 for i in range(number_of_cars):
-    distance_avg_list.append(round(distance_list[i]/counter,1))
+    distance_avg_list.append(round(distance_list[i]/(counter-1),1))
     
 #print("移動時間")
 #print(duration_list)
