@@ -9,12 +9,14 @@ import os
 #infilename2 = "result grid3x3.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
 #infilename2 = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars1fake_obs1.csv"
 infilename1 = "result average.csv"
+#infilename1 = "result std.csv"
 infilename2 = "fake_result average.csv"
+#infilename2 = "fake_result std.csv"
 
 dir1 = './result'
 dir2 = './fake_result'
 
-number_of_cars = 100
+number_of_cars = 300
 #試行回数
 number_of_trials = 100
 
@@ -23,7 +25,7 @@ distance_list1 = []
 file_path1 = os.path.join(dir1,infilename1)
 infile1 = open(file_path1,"r",encoding="utf-8")
 #対応車両台数
-half_number_of_cars = 50
+half_number_of_cars = int(number_of_cars/2)
 line_counter = 0
 for line in infile1:
     """if line_counter == 0:
@@ -33,7 +35,7 @@ for line in infile1:
         break"""
 
     data_list = line.replace("¥n","").split(",")
-    duration_list1.append(int(data_list[0]))
+    duration_list1.append(float(data_list[0]))
     distance_list1.append(float(data_list[1]))
     line_counter += 1
 infile1.close()
@@ -59,7 +61,7 @@ for line in infile2:
         break"""
 
     data_list = line.replace("¥n","").split(",")
-    duration_list2.append(int(data_list[0]))
+    duration_list2.append(float(data_list[0]))
     distance_list2.append(float(data_list[1]))
     line_counter += 1
 infile2.close()
