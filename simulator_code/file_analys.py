@@ -77,7 +77,7 @@ plt.hist(distance_std, bins=50, rwidth=0.9, color='b')
 plt.savefig(folder_name  + '/' + "ゴールタイムの標準偏差.png")
 plt.clf()
 
-with open(folder_name  + '/' + output_name1, 'w', newline='') as f:
+"""with open(folder_name  + '/' + output_name1, 'w', newline='') as f:
     writer = csv.writer(f)
     for i in range(len(duration_avg_list)):
         writer.writerow([duration_avg_list[i],distance_avg_list[i]])
@@ -85,7 +85,7 @@ with open(folder_name  + '/' + output_name1, 'w', newline='') as f:
 with open(folder_name  + '/' + output_name2, 'w', newline='') as f:
     writer = csv.writer(f)
     for i in range(len(duration_std)):
-        writer.writerow([duration_std[i],distance_std[i]])
+        writer.writerow([duration_std[i],distance_std[i]])"""
     
 """if counter == 0:
         for i in range(number_of_cars):
