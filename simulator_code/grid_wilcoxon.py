@@ -16,7 +16,7 @@ U_duration_std = 0
 U_distance_std = 0
 
 count = 0
-number_of_cars = 300
+number_of_cars = 600
 half_number_of_cars = int(number_of_cars/2)
 
 #print(os.listdir(dir1)[0])
@@ -93,7 +93,7 @@ U_duration_std = np.std(U_duration_list, dtype=int)
 U_distance_std = np.std(U_distance_list, dtype=int)
 print("転倒数の平均")
 print("duration : " + str(U_duration_avg))
-print("duration : " + str(U_distance_avg))
+print("distance : " + str(U_distance_avg))
 print("転倒数の標準偏差")
 print("duration : " + str(U_duration_std))
-print("duration : " + str(U_distance_std))
+print("distance : " + str(U_distance_std))

@@ -14,8 +14,8 @@ file_list = []
 file_dic = {}
 #infile = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
 infile = "回目"
-#dir = './result'
-dir = './fake_result'
+dir = './result'
+#dir = './fake_result'
 
 #実行
 while(True):
@@ -30,7 +30,10 @@ while(True):
             break
         else:
             a = np.random.randint(12345,123456)
+    if len(os.listdir(dir)) == 50:
+        print("### 50回目終了 ###")
     if len(os.listdir(dir)) == times:
+        print("### 100回目終了 ###")
         break
     #os.system("python argv.py " + str(a))
     #file_dic[num] = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"

@@ -21,8 +21,8 @@ from grid_road_segment import RoadSegment
 from obstacle import Obstacle
 
 ### simulation settings ###
-#infilename = "grid3x3.net.xml"
-infilename = "grid5x5.net.xml"
+infilename = "grid3x3.net.xml"
+#infilename = "grid5x5.net.xml"
 #infilename = "tsudanuma.net.xml"
 #infilename = "sfc_small.net.xml"
 
@@ -34,20 +34,20 @@ print("seed値 : " + str(a))
 np.random.seed(a)
 #input parameters
 
-number_of_cars = 300
+number_of_cars = 600
 number_of_obstacles = 10
 oppcomm_rate = 1.0
 sensitivity = 1.0
 
-number_of_fake_cars = 1 #悪意のある車両数
-number_of_fake_obstacles = 1 #偽の通行不能箇所の数
+number_of_fake_cars = 0 #悪意のある車両数
+number_of_fake_obstacles = 0 #偽の通行不能箇所の数
 
 math_count = 0
 avoid_count = 0
 
 file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".csv"
-#folder_name = "result"
-folder_name = "fake_result"
+folder_name = "result"
+#folder_name = "fake_result"
 
 print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles,oppcomm_rate)
 # functions
