@@ -5,8 +5,8 @@ import os
 import csv
 import matplotlib.pyplot as plt
 
-dir1 = "./result"
-dir2 = "./fake_result"
+dir1 = "./result(csv)"
+dir2 = "./fake_result(csv)"
 
 U_duration_list = []
 U_distance_list = []
@@ -19,8 +19,6 @@ count = 0
 #サンプル数
 number_of_cars = 300
 half_number_of_cars = int(number_of_cars/2)
-
-#print(os.listdir(dir1)[0])
 
 for file_name1 in os.listdir(dir1):
     file_path1 = os.path.join(dir1,file_name1)

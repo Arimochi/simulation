@@ -28,14 +28,13 @@ infilename = "grid5x5.net.xml"
 
 #opportunistic_communication_frag = True
 #a = np.random.randint(12345,123456)
-#a = int(sys.argv[1])
-#a = 13563
 a = 123456
+#a = int(sys.argv[1])
 print("seed値 : " + str(a))
 np.random.seed(a)
 
 #input parameters
-number_of_cars = 600 #一般車両
+number_of_cars = 300 #一般車両
 number_of_obstacles = 10 #通行不能箇所数
 number_of_fake_cars = 1 #悪意のある車両数
 number_of_fake_obstacles = 1 #偽の通行不能箇所数
@@ -46,11 +45,14 @@ math_count = 0
 avoid_count = 0
 
 file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".csv"
-folder_name = "result"
-if number_of_cars >= 1:
- folder_name = "fake_result"
+folder_name = "result(csv)"
+if number_of_fake_cars >= 1:
+ folder_name = "fake_result(csv)"
 
-print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles)
+folder_name2 = "moving_distance"
+folder_name3 = "goal_time"
+
+print(number_of_cars,number_of_obstacles,number_of_fake_cars,number_of_fake_obstacles)
 # functions
 #xmlファイルを読み込み
 def read_parse_netxml(infilename):
@@ -227,8 +229,8 @@ def animate(time):
         if car_forward_pt.fake_flag == False:
           x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
         #偽の障害物ならmove
-        #else:
-          #x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
+        else:
+          None
           #print(car_forward_pt)
           #print(car)
         #print(car_forward_pt.fake_flag)
@@ -261,11 +263,9 @@ def animate(time):
                   #car.number_of_opportunistic_communication += 1
                   car.obstacles_info_list.append(i)
                   if oncoming_car.fakecar_flag == False:
-                    passing_comunication += 1
-                    #print("安心")
+                    passing_comunication += 1 #相手は一般車両
                   else:
-                    passing_comunication += 1
-                    #print("警告")
+                    passing_comunication += 1 #相手は攻撃車両
 
                   if i in car.shortest_path:
                     for j in range(len(car.shortest_path)-1):
@@ -274,8 +274,6 @@ def animate(time):
                     for j in car.short_path:
                       if j[1] == i:
                         #print(j)
-                        #print(car.DG_copied)
-                        
                         if j[1] != car.shortest_path[car.current_sp_index + 1]:
                           if car.DG_copied.has_edge(j[0],j[1]) == True:
                             car.DG_copied.remove_edge(j[0],j[1])
@@ -316,16 +314,10 @@ def animate(time):
                                 car.dest_node_id = x_y_dic[(edge_lanes_list[car.dest_lane_id].node_x_list[-1], edge_lanes_list[car.dest_lane_id].node_y_list[-1])]
                               
                               avoid_count += 1
-                              #print("スルー1")
-                              #print("スルーした回数" + str(avoid_count))
-                              #print("-------------------")
 
                         else:
-                          #print("スルー2")
                           x_new, y_new = car.U_turn(edges_cars_dic, lane_dic, edge_lanes_list, x_y_dic, obstacle_node_id_list)
                           avoid_count += 1
-                          #print("スルーした回数" + str(avoid_count))
-                          #print("-------------------")
                   
     #elif car.__class__.__name__ == 'Obstacle':
      # print("Obstacle #%d instance is called, skip!!!" % (car.obstacle_node_id))
@@ -368,13 +360,13 @@ def animate(time):
     plt.hist(moving_distance_list, bins=50, rwidth=0.9, color='b')
     plt.xlabel("moving distance")
     plt.ylabel("number of cars")
-    plt.savefig("総移動距離 " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".png")
+    plt.savefig(folder_name2 + '/' + "総移動距離(" + str(a) + ") " + infilename + " " + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".png")
     plt.clf()
 
     plt.hist(goal_time_list, bins=50, rwidth=0.9, color='b')
     plt.xlabel("goal time")
     plt.ylabel("number of cars")
-    plt.savefig("ゴールタイム " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".png")
+    plt.savefig(folder_name3 + '/' +"ゴールタイム(" + str(a) + ") " + infilename + " " + str(oppcomm_rate) + " " + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".png")
     plt.clf()
 
     """plt.hist(number_of_opportunistic_communication_list, bins=50,rwidth=0.9, color='b')
@@ -516,6 +508,7 @@ if __name__ == "__main__":
     car = Car(origin_node_id, destination_node_id, destination_lane_id, shortest_path, origin_lane_id, DG, True)
     car.init(DG)  # initialization of car settings
     cars_list.append(car)
+    fakecars_list.append(car)
     edges_cars_dic[(edge_lanes_list[origin_lane_id].node_id_list[0], edge_lanes_list[origin_lane_id].node_id_list[1])].append(car)
     for j in range(number_of_fake_obstacles):
       for k, v in obstacle_dic.items():

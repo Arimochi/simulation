@@ -9,6 +9,8 @@ repetition=100000
 n1=50
 n2=50
 
+folder_name = "wilcoxon_sample"
+
 U_list=[]
 for i in range(repetition):
     if i % 1000 == 0:
@@ -56,5 +58,5 @@ plt.axvline(x=lower_bound,color="red",linestyle="--")
 plt.axvline(x=upper_bound,color="red",linestyle="--")
 plt.text(x=lower_bound,y=y_val1,s=str(lower_bound),color="red",fontsize=12)
 plt.text(x=upper_bound,y=y_val2,s=str(upper_bound),color="red",fontsize=12)
-plt.savefig("wilcoxon_n="+str(n1)+"repetiton="+str(repetition)+".png")
+plt.savefig(folder_name + '/' + "wilcoxon_n="+str(n1)+"repetiton="+str(repetition)+".png")
 plt.clf()

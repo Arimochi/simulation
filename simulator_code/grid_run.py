@@ -12,8 +12,8 @@ num = 0
 ns = []
 file_list = []
 infile = "回目"
-dir = './result'
-#dir = './fake_result'
+dir = './result(csv)'
+#dir = './fake_result(csv)'
 
 #実行
 while(True):
