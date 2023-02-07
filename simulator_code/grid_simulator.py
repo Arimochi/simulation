@@ -21,35 +21,36 @@ from grid_road_segment import RoadSegment
 from obstacle import Obstacle
 
 ### simulation settings ###
-infilename = "grid3x3.net.xml"
-#infilename = "grid5x5.net.xml"
+#infilename = "grid3x3.net.xml"
+infilename = "grid5x5.net.xml"
 #infilename = "tsudanuma.net.xml"
 #infilename = "sfc_small.net.xml"
 
 #opportunistic_communication_frag = True
 #a = np.random.randint(12345,123456)
-a = int(sys.argv[1])
+#a = int(sys.argv[1])
 #a = 13563
+a = 123456
 print("seed値 : " + str(a))
 np.random.seed(a)
-#input parameters
 
-number_of_cars = 600
-number_of_obstacles = 10
+#input parameters
+number_of_cars = 600 #一般車両
+number_of_obstacles = 10 #通行不能箇所数
+number_of_fake_cars = 1 #悪意のある車両数
+number_of_fake_obstacles = 1 #偽の通行不能箇所数
 oppcomm_rate = 1.0
 sensitivity = 1.0
-
-number_of_fake_cars = 0 #悪意のある車両数
-number_of_fake_obstacles = 0 #偽の通行不能箇所の数
 
 math_count = 0
 avoid_count = 0
 
 file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + " " + str(number_of_fake_cars) + " " + str(number_of_fake_obstacles) + ".csv"
 folder_name = "result"
-#folder_name = "fake_result"
+if number_of_cars >= 1:
+ folder_name = "fake_result"
 
-print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles,oppcomm_rate)
+print(number_of_cars,number_of_fake_cars,number_of_obstacles,number_of_fake_obstacles)
 # functions
 #xmlファイルを読み込み
 def read_parse_netxml(infilename):
@@ -71,7 +72,6 @@ def create_road_network(root):
   node_id = 0
   lane_id = 0
  
-
   DG = nx.DiGraph() # Directed graph of road network
   edge_lanes_list = [] # list of lane instances
   for child in root:
@@ -114,8 +114,6 @@ def create_road_network(root):
           lane_id += 1
           lane.set_others(float(child2.attrib["speed"]), node_id_list, node_x_list, node_y_list)
           edge_lanes_list.append(lane)  # to modify here
-          #if lane_dic[720] == True:
-            #print(lane_dic)
 
   return x_y_dic, lane_dic, edge_length_dic, DG, edge_lanes_list
 
@@ -190,19 +188,17 @@ def init():
   line3.set_data([], [])
   line4.set_data([], [])
   title.set_text("Simulation step: 0")
-  return line1, line2, line3, title
+  return line1, line2, line3, line4, title
 
 # main of animation update
 def animate(time):
   global xdata,ydata,obstacle_x,obstacle_y,Fxdata,Fydata,avoid_count,math_count,passing_comunication,goal_count
   global goal_time_list, number_of_shortest_path_changes_list, number_of_opportunistic_communication_list, moving_distance_list, time_list
+  #sleep(0.1)
 
   xdata = []; ydata = []
   Fxdata = []; Fydata = []
   #all_cars_list = []
-  
-  #sleep(0.1)
-
   #all_cars_list = cars_list + fakecars_list
 
   for car in cars_list:
@@ -330,13 +326,6 @@ def animate(time):
                           avoid_count += 1
                           #print("スルーした回数" + str(avoid_count))
                           #print("-------------------")
-
-                  #a = x_y_dic[(edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_x_list[0],edge_lanes_list[lane_dic[car.obstacles_info_list[-1]]].node_y_list[0])]
-                  #print(a)
-                  #if car.DG_copied.has_node(i) == True:
-                    #car.DG_copied.remove_node(i)
-                    #print((car.current_position[0], car.current_position[1]) in x_y_dic)
-                    #現在地がcurrent_end_node_idのときの条件を追加
                   
     #elif car.__class__.__name__ == 'Obstacle':
      # print("Obstacle #%d instance is called, skip!!!" % (car.obstacle_node_id))
@@ -377,10 +366,14 @@ def animate(time):
     plt.clf()
 
     plt.hist(moving_distance_list, bins=50, rwidth=0.9, color='b')
+    plt.xlabel("moving distance")
+    plt.ylabel("number of cars")
     plt.savefig("総移動距離 " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".png")
     plt.clf()
 
     plt.hist(goal_time_list, bins=50, rwidth=0.9, color='b')
+    plt.xlabel("goal time")
+    plt.ylabel("number of cars")
     plt.savefig("ゴールタイム " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".png")
     plt.clf()
 
@@ -394,11 +387,6 @@ def animate(time):
     plt.savefig("経路変更数.png")
     plt.clf()"""
 
-    #file_name = "result(" + str(a) + ") " + infilename + str(number_of_cars) + " " + str(number_of_obstacles) + ".csv"
-    #folder_name = "result"
-    #folder_name = "fake_result"
-    #with open(str(a) + "result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
-    #with open("result " + infilename + " rate=" + str(oppcomm_rate) + "cars" + str(number_of_cars) + "obstacles" + str(number_of_obstacles) + "fake_cars" + str(number_of_fake_cars) + "fake_obs" + str(number_of_fake_obstacles) + ".csv", 'w', newline='') as f:
     with open(folder_name + '/' + file_name, 'w', newline='') as f:
       writer = csv.writer(f)
       for i in range(number_of_cars):
@@ -474,7 +462,7 @@ if __name__ == "__main__":
     if nx.is_weakly_connected(DG) == True:
       break
 
-  #偽の通行不能箇所
+  #偽の通行不能箇所(仮)
   while True:
     for i in range(number_of_fake_obstacles):
       obstacle_lane_id, obstacle_node_id = find_obstacle_lane_and_node()
@@ -514,7 +502,7 @@ if __name__ == "__main__":
     if oppcomm_rate * number_of_cars < i: #車両の割合ですれ違いのフラグのon/off
       car.opportunistic_communication_frag = False
 
-  #悪意のある車両作成
+  #悪意のある車両作成(仮)
   for j in range(number_of_fake_cars):
     origin_lane_id, destination_lane_id, origin_node_id, destination_node_id = find_OD_node_and_lane()
     while True:
@@ -578,5 +566,5 @@ if __name__ == "__main__":
   #print("remath:" + str(math_count) + " through:" + str(avoid_count) + " pass:" + str(passing_comunication))
   print("### Start of simulation ###")
   ani = FuncAnimation(fig, animate, frames=range(1000), init_func=init, blit=True, interval= 10)
-  #ani.save("grid-sanimation.mp4", writer="ffmpeg")
+  #ani.save("grid-sanimation.gif", writer='imagemagick')
   plt.show()

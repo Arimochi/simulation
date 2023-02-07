@@ -7,12 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #回数
-times = 100
+times = 2
 num = 0
 ns = []
 file_list = []
-file_dic = {}
-#infile = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
 infile = "回目"
 dir = './result'
 #dir = './fake_result'
@@ -36,8 +34,5 @@ while(True):
         print("### 100回目終了 ###")
         break
     #os.system("python argv.py " + str(a))
-    #file_dic[num] = "result grid5x5.net.xml rate=1.0cars100obstacles10fake_cars0fake_obs0.csv"
 
 #print(file_list)
-#print(file_list[1])
-#print(file_dic)

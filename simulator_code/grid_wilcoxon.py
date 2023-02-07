@@ -16,7 +16,8 @@ U_duration_std = 0
 U_distance_std = 0
 
 count = 0
-number_of_cars = 600
+#サンプル数
+number_of_cars = 300
 half_number_of_cars = int(number_of_cars/2)
 
 #print(os.listdir(dir1)[0])
@@ -73,7 +74,6 @@ for file_name1 in os.listdir(dir1):
             if duration_list_sorted2[j] > duration_list_sorted1[k]:
                 U += 1
     U_duration_list.append(U)
-    #print("duration:",U,"(average:",len(duration_list_sorted1)*len(duration_list_sorted2)/2,")")
 
     U = 0
     for j in range(len(distance_list_sorted2)):
@@ -81,19 +81,18 @@ for file_name1 in os.listdir(dir1):
             if distance_list_sorted2[j] > distance_list_sorted1[k]:
                 U += 1
     U_distance_list.append(U)
-    #print("distance:",U,"(average:",len(distance_list_sorted1)*len(distance_list_sorted2)/2,")")
 
     count += 1
 
 #print(U_duration_list)
 #print(U_distance_list)
-U_duration_avg = np.mean(U_duration_list, dtype=int)
-U_distance_avg = np.mean(U_distance_list, dtype=int)
-U_duration_std = np.std(U_duration_list, dtype=int)
-U_distance_std = np.std(U_distance_list, dtype=int)
+U_duration_avg = np.mean(U_duration_list)
+U_distance_avg = np.mean(U_distance_list)
+U_duration_std = np.std(U_duration_list)
+U_distance_std = np.std(U_distance_list)
 print("転倒数の平均")
-print("duration : " + str(U_duration_avg))
-print("distance : " + str(U_distance_avg))
+print("duration : " + str(int(U_duration_avg)))
+print("distance : " + str(int(U_distance_avg)))
 print("転倒数の標準偏差")
-print("duration : " + str(U_duration_std))
-print("distance : " + str(U_distance_std))
+print("duration : " + str(int(U_duration_std)))
+print("distance : " + str(int(U_distance_std)))
